@@ -31,24 +31,11 @@ export default function App() {
 
           if (adminResult.includes(window.accountId)) {
             setUser({ id: window.accountId, role: 2 });
-            // const orders = await fetchOrderList();
-            // setOrders(orders);
           } else {
-            const result = await Promise.all([
-              fetchCustomerByAccountId(window.accountId),
-              // fetchOrdersByCustomerAccountId(window.accountId),
-            ]);
+            const result = await fetchCustomerByAccountId(window.accountId);
 
-            if (result?.length) {
-              const userResult = result[0];
-              // const orders = result[1];
-
-              const user = userResult
-                ? userResult
-                : { id: window.accountId, role: 1 };
-              setUser(user);
-              // setOrders(orders);
-            }
+            const user = result ? result : { id: window.accountId, role: 1 };
+            setUser(user);
           }
         } catch (error) {
           console.error("[fetchCustomerByAccountId]: ", error?.message);
