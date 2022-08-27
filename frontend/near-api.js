@@ -148,10 +148,11 @@ export async function createOrder(
   price_in_near
 ) {
   const price_in_yocto_near = utils.format.parseNearAmount(`${price_in_near}`);
-  const callback_url =
-    process.env.NODE_ENV == "development"
-      ? `${window.location.origin}/orders`
-      : "/";
+  let callback_url = "/";
+
+  if (window.location.origin.includes("localhost")) {
+    callback_url = `${window.location.origin}/orders`;
+  }
 
   const response = await window.contract.call_create_order({
     callbackUrl: callback_url,
