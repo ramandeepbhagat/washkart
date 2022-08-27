@@ -53,14 +53,8 @@ export default function App() {
         } catch (error) {
           console.error("[fetchCustomerByAccountId]: ", error?.message);
           setUser({ id: window.accountId, role: 1 });
-          // setOrders([]);
-          setLoader(false);
-        } finally {
-          console.log("finally");
         }
       })();
-    } else {
-      setLoader(false);
     }
   }, [
     window.walletConnection.isSignedIn,
