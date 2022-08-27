@@ -57,7 +57,7 @@ export async function initContract() {
 export function signOutNearWallet() {
   window.walletConnection.signOut();
   // reload page
-  window.location.replace(window.location.origin + window.location.pathname);
+  window.location.replace(window.location.origin);
 }
 
 export function signInWithNearWallet() {
