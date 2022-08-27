@@ -9,6 +9,8 @@ import { getConfig } from "./near-config";
 
 const nearConfig = getConfig(process.env.NODE_ENV || "development");
 
+console.log("NODE_ENV: ", process.env.NODE_ENV);
+
 // Initialize contract & set global variables
 export async function initContract() {
   // Initialize connection to the NEAR testnet
