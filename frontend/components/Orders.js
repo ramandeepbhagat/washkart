@@ -42,6 +42,7 @@ export default function Orders() {
 
   const fetchOrders = async () => {
     try {
+      setLoader(true);
       if (user?.role === 1) {
         const result = await fetchOrdersByCustomerAccountId(user?.id);
         setOrders(result);
@@ -55,6 +56,7 @@ export default function Orders() {
       console.log(error.message);
       alert(`fetchOrders Error: \n${error?.message}`);
     } finally {
+      setLoader(false);
     }
   };
 

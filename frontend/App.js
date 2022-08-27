@@ -54,9 +54,9 @@ export default function App() {
           console.error("[fetchCustomerByAccountId]: ", error?.message);
           setUser({ id: window.accountId, role: 1 });
           // setOrders([]);
+          setLoader(false);
         } finally {
           console.log("finally");
-          setLoader(false);
         }
       })();
     } else {
