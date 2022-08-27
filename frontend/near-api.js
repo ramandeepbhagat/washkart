@@ -150,7 +150,7 @@ export async function createOrder(
   const price_in_yocto_near = utils.format.parseNearAmount(`${price_in_near}`);
 
   // works on vercel or netliify
-  let callback_url = "/";
+  let callback_url = `${window.location.origin}`;
 
   if (window.location.origin.includes("localhost")) {
     // does not work on vercel or netliify when full reload occurs
