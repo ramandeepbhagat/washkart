@@ -11,7 +11,7 @@ import { AuthContext } from "../lib/Auth";
 import { isEmpty } from "../lib/utils";
 
 export default function UserForm() {
-  const { user, setUser, setLoader } = useContext(AuthContext);
+  const { user, setUser, loader, setLoader } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const saveCustomer = async (
@@ -216,7 +216,7 @@ export default function UserForm() {
       <button
         type="submit"
         className="btn btn-primary"
-        disabled={user?.role == 2}
+        disabled={user?.role === 2 || loader === true}
       >
         Submit
       </button>

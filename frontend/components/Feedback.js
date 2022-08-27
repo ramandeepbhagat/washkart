@@ -10,7 +10,8 @@ import {
 export default function Feedback() {
   let { orderId } = useParams();
   //   let params = useParams();
-  const { user, orders, setLoader, setOrders } = useContext(AuthContext);
+  const { user, orders, loader, setLoader, setOrders } =
+    useContext(AuthContext);
   const navigate = useNavigate();
 
   const [order, setOrder] = useState({
@@ -243,7 +244,7 @@ export default function Feedback() {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={user?.role === 2}
+                  disabled={user?.role === 2 || loader === true}
                 >
                   Submit
                 </button>

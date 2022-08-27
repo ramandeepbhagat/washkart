@@ -8,7 +8,7 @@ import { isEmpty } from "../lib/utils";
 
 export default function OrderForm() {
   const navigate = useNavigate();
-  const { user, setLoader } = useContext(AuthContext);
+  const { user, loader, setLoader } = useContext(AuthContext);
   const [totalPrice, setTotalPrice] = useState(3);
 
   const calculate_price = (weight) => {
@@ -145,7 +145,11 @@ export default function OrderForm() {
         Order cannot be cancelled by customer once placed.
       </h6>
 
-      <button type="submit" className="btn btn-primary">
+      <button
+        type="submit"
+        className="btn btn-primary"
+        disabled={user?.role === 2 || loader === true}
+      >
         Submit
       </button>
     </form>
