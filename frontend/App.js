@@ -14,14 +14,12 @@ import { AuthContext } from "./lib/Auth";
 import Header from "./components/Header";
 import Spinner from "./components/Spinner";
 import Home from "./components/Home";
-import Orders from "./components/Orders";
 import UserForm from "./components/UserForm";
 import OrderForm from "./components/OrderForm";
 import Feedback from "./components/Feedback";
 
 export default function App() {
-  const { user, setUser, setLoader, setAdmins, setOrders } =
-    useContext(AuthContext);
+  const { user, setUser, setLoader, setAdmins } = useContext(AuthContext);
 
   useEffect(() => {
     if (window.walletConnection.isSignedIn()) {
@@ -33,29 +31,29 @@ export default function App() {
 
           if (adminResult.includes(window.accountId)) {
             setUser({ id: window.accountId, role: 2 });
-            const orders = await fetchOrderList();
-            setOrders(orders);
+            // const orders = await fetchOrderList();
+            // setOrders(orders);
           } else {
             const result = await Promise.all([
               fetchCustomerByAccountId(window.accountId),
-              fetchOrdersByCustomerAccountId(window.accountId),
+              // fetchOrdersByCustomerAccountId(window.accountId),
             ]);
 
             if (result?.length) {
               const userResult = result[0];
-              const orders = result[1];
+              // const orders = result[1];
 
               const user = userResult
                 ? userResult
                 : { id: window.accountId, role: 1 };
               setUser(user);
-              setOrders(orders);
+              // setOrders(orders);
             }
           }
         } catch (error) {
           console.error("[fetchCustomerByAccountId]: ", error?.message);
           setUser({ id: window.accountId, role: 1 });
-          setOrders([]);
+          // setOrders([]);
         } finally {
           console.log("finally");
           setLoader(false);
@@ -70,7 +68,7 @@ export default function App() {
     getAdminList,
     fetchCustomerByAccountId,
     fetchOrdersByCustomerAccountId,
-    setOrders,
+    // setOrders,
     setUser,
     setLoader,
   ]);
@@ -83,9 +81,8 @@ export default function App() {
         <Routes>
           <Route path="*" element={<Home />} />
           <Route path="account" element={<UserForm />} />
-          <Route path="new-order" element={<OrderForm />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="orders/:orderId" element={<Feedback />} />
+          <Route path="o/new" element={<OrderForm />} />
+          <Route path="o/:orderId" element={<Feedback />} />
         </Routes>
       </main>
     </>

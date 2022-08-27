@@ -10,7 +10,7 @@ import {
 export default function Feedback() {
   let { orderId } = useParams();
   //   let params = useParams();
-  const { orders, setLoader, setOrders } = useContext(AuthContext);
+  const { user, orders, setLoader, setOrders } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [order, setOrder] = useState({
@@ -38,6 +38,10 @@ export default function Feedback() {
       }
       if (order?.status != 3) {
         alert("Order must be Delivered to submit feedback.");
+        return;
+      }
+      if (user?.role === 2) {
+        alert("Only customers can submit feedback.");
         return;
       }
 
@@ -206,8 +210,11 @@ export default function Feedback() {
                     id="inputRating"
                     className="form-select form-select-sm mb-3"
                     aria-label=".form-select-sm"
+                    readOnly={user?.role === 2}
                     value={feedbackRating}
-                    onChange={(e) => setFeedbackRating(e?.target?.value)}
+                    onChange={(e) =>
+                      user?.role === 1 && setFeedbackRating(e?.target?.value)
+                    }
                   >
                     <option value={1}>None</option>
                     <option value={2}>Excellent</option>
@@ -225,12 +232,19 @@ export default function Feedback() {
                     className="form-control"
                     id="inputFeedbackComment"
                     placeholder="Cutomer feedback comment"
+                    readOnly={user?.role === 2}
                     value={feedbackComment}
-                    onChange={(e) => setFeedbackComment(e?.target?.value)}
+                    onChange={(e) =>
+                      user?.role === 1 && setFeedbackComment(e?.target?.value)
+                    }
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={user?.role === 2}
+                >
                   Submit
                 </button>
               </form>

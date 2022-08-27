@@ -38,6 +38,7 @@ export default function UserForm() {
 
       alert("customer created");
       console.log("customer created");
+      navigate(`/`);
     } catch (error) {
       console.log(error?.message);
       alert(`Error: \n${error?.message}`);
@@ -70,6 +71,7 @@ export default function UserForm() {
 
       alert("customer updated");
       console.log("customer updated");
+      navigate(`/`);
     } catch (error) {
       console.log(error?.message);
       alert(`Error: \n${error?.message}`);
@@ -211,7 +213,11 @@ export default function UserForm() {
         </label>
       </div>
 
-      <button type="submit" className="btn btn-primary">
+      <button
+        type="submit"
+        className="btn btn-primary"
+        disabled={user?.role == 2}
+      >
         Submit
       </button>
     </form>

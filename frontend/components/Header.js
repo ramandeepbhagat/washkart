@@ -19,11 +19,7 @@ export default function Header({ user }) {
               Home
             </Link>
           </li>
-          <li>
-            <Link to="/orders" className="nav-link px-2 link-dark">
-              Orders
-            </Link>
-          </li>
+
           {user?.role != 2 && (
             <>
               <li>
@@ -33,7 +29,7 @@ export default function Header({ user }) {
               </li>
               <li>
                 <Link
-                  to="/new-order"
+                  to="/o/new"
                   className=" btn btn-sm nav-link px-2 link-success"
                 >
                   New Order

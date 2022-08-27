@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { utils } from "near-api-js";
 import { AuthContext } from "../lib/Auth";
 import {
@@ -11,8 +11,6 @@ import {
 export default function Orders() {
   const { user, orders, setOrders, loader, setLoader } =
     useContext(AuthContext);
-
-  const navigate = useNavigate();
 
   const handleStatusChange = async (status, order) => {
     try {
@@ -65,8 +63,6 @@ export default function Orders() {
       (async () => {
         await fetchOrders();
       })();
-    } else {
-      navigate(`/`);
     }
   }, [window.walletConnection.isSignedIn, fetchOrders, loader]);
 
@@ -91,7 +87,7 @@ export default function Orders() {
               return (
                 <tr key={o?.id}>
                   <td>
-                    <Link to={`/orders/${o?.id}`}>{o?.id}</Link>
+                    <Link to={`/o/${o?.id}`}>{o?.id}</Link>
                   </td>
                   {user?.role === 2 && <td>{o?.customerId}</td>}
                   <td>{o?.paymentType === 1 ? "Prepaid" : ""}</td>
