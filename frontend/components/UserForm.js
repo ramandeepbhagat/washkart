@@ -41,7 +41,7 @@ export default function UserForm() {
       navigate(`/`);
     } catch (error) {
       console.log(error?.message);
-      alert(`Error: \n${error?.message}`);
+      alert(`[saveCustomer] Error: \n${error?.message}`);
     } finally {
       setLoader(false);
     }
@@ -74,7 +74,7 @@ export default function UserForm() {
       navigate(`/`);
     } catch (error) {
       console.log(error?.message);
-      alert(`Error: \n${error?.message}`);
+      alert(`[editCustomer] Error: \n${error?.message}`);
     } finally {
       setLoader(false);
     }
@@ -128,6 +128,7 @@ export default function UserForm() {
       } else {
         console.log("invalid_input");
         alert("Name, phone and address are required.");
+        setLoader(false);
         return;
       }
     } else {

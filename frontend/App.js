@@ -7,7 +7,6 @@ import {
   fetchCustomerByAccountId,
   getAdminList,
   fetchOrdersByCustomerAccountId,
-  fetchOrderList,
 } from "./near-api";
 import { AuthContext } from "./lib/Auth";
 
