@@ -9,19 +9,17 @@ import {
 } from "../near-api";
 
 export default function Orders() {
-  const { user, orders, setOrders, loader, setLoader } =
-    useContext(AuthContext);
+  const { user, orders, setOrders, setLoader } = useContext(AuthContext);
 
   const handleStatusChange = async (status, order) => {
     try {
       if (user?.role === 2 && confirm("Are you sure?") == true) {
         setLoader(true);
 
-        const result = await updateOrderStatus(order?.id, parseInt(status, 10));
-        console.log(result);
+        await updateOrderStatus(order?.id, parseInt(status, 10));
 
         const updatedOrders = orders.map((o) => {
-          if (o.id === order?.id) {
+          if (o?.id === order?.id) {
             o.status = parseInt(status, 10);
           }
           return o;
@@ -29,12 +27,12 @@ export default function Orders() {
 
         setOrders(updatedOrders);
 
-        alert("Order status updated");
         console.log("Order status updated");
+        alert("Order status updated");
       }
     } catch (error) {
-      console.log(error.message);
-      alert(`handleStatusChange Error: \n${error?.message}`);
+      console.log(`[handleStatusChange] Error: \n${error?.message}`);
+      alert(`[handleStatusChange] Error: \n${error?.message}`);
     } finally {
       setLoader(false);
     }

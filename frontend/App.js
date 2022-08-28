@@ -18,39 +18,52 @@ import OrderForm from "./components/OrderForm";
 import Feedback from "./components/Feedback";
 
 export default function App() {
-  const { user, setUser, setLoader, setAdmins } = useContext(AuthContext);
+  const { user, setUser, setLoader, admins, setAdmins } =
+    useContext(AuthContext);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const result = await fetchCustomerByAccountId(window.accountId);
+      setUser(result);
+    } catch (error) {
+      setUser({ id: window.accountId, role: 1 });
+      console.error(`[fetchCurrentUser] ${error?.message}`);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const fetchAdmins = async () => {
+    try {
+      setLoader(true);
+      const adminResult = await getAdminList();
+      setAdmins(adminResult);
+
+      if (admins.includes(window.accountId)) {
+        setUser({ id: window.accountId, role: 2 });
+      }
+    } catch (error) {
+      console.error(`[fetchAdmins] ${error?.message}`);
+    } finally {
+      setLoader(false);
+    }
+  };
 
   useEffect(() => {
-    if (window.walletConnection.isSignedIn()) {
+    if (window?.walletConnection?.isSignedIn()) {
       (async () => {
-        try {
-          setLoader(true);
-          const adminResult = await getAdminList();
-          setAdmins(adminResult);
+        await fetchAdmins();
 
-          if (adminResult.includes(window.accountId)) {
-            setUser({ id: window.accountId, role: 2 });
-          } else {
-            const result = await fetchCustomerByAccountId(window.accountId);
-
-            const user = result ? result : { id: window.accountId, role: 1 };
-            setUser(user);
-          }
-        } catch (error) {
-          console.error("[fetchCustomerByAccountId]: ", error?.message);
-          setUser({ id: window.accountId, role: 1 });
+        if (!admins.includes(window?.accountId)) {
+          await fetchCurrentUser();
         }
       })();
     }
   }, [
     window.walletConnection.isSignedIn,
     window.accountId,
-    getAdminList,
-    fetchCustomerByAccountId,
-    fetchOrdersByCustomerAccountId,
-    // setOrders,
-    setUser,
-    setLoader,
+    fetchAdmins,
+    fetchCurrentUser,
   ]);
 
   return (
