@@ -53,16 +53,16 @@ Before you compile this code, you will need to install [Node.js] ≥ 16
 
 ## 10. Update a customer by accountId
 
-    `near call washkart.YOUR-NAME.testnet call_update_customer '{"name": "john doe", "full_address": "369, wall street, new york", "landmark": "city center", "google_plus_code_address": "", "phone": "9999567999", "email": "johndoe@email.com"}' --accountId YOUR-ANOTHER-NAME.testnet`
+`near call washkart.YOUR-NAME.testnet call_update_customer '{"name": "john doe", "full_address": "369, wall street, new york", "landmark": "city center", "google_plus_code_address": "", "phone": "9999567999", "email": "johndoe@email.com"}' --accountId YOUR-ANOTHER-NAME.testnet`
 
 ## 11. Create an order
 
-    `near call washkart.YOUR-NAME.testnet call_create_order '{"id": "fhjgjltg", "description": "simple order", "weight_in_grams": '9000', "price_in_yocto_near": '100'}' --deposit 10 --accountId YOUR-ANOTHER-NAME.testnet`
+`near call washkart.YOUR-NAME.testnet call_create_order '{"id": "fhjgjltg", "description": "simple order", "weight_in_grams": '9000', "price_in_yocto_near": '100'}' --deposit 10 --accountId YOUR-ANOTHER-NAME.testnet`
 
 ## 12. Update status of an order by orderId
 
-    `near call washkart.YOUR-NAME.testnet call_update_order_status '{"order_id": "fhjgjltg", "order_status": 2}' --accountId YOUR-NAME.testnet`
+`near call washkart.YOUR-NAME.testnet call_update_order_status '{"order_id": "fhjgjltg", "order_status": 2}' --accountId YOUR-NAME.testnet`
 
 ## 13. Delete sub-account
 
-    `near delete washkart.YOUR-NAME.testnet YOUR-NAME.testnet`
+`near delete washkart.YOUR-NAME.testnet YOUR-NAME.testnet`
