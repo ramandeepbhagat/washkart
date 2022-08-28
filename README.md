@@ -1,6 +1,16 @@
 # WASHKART
 
-This app was initialized with [create-near-app]
+Washkart is a dapp that help users to get their clothes (laundry) washed just by clicking few buttons from the comfort of their homes.
+
+Demo link: https://washkart.vercel.app/
+
+App features:
+
+1. Role-based access control (customer, admin)
+2. Free pickup and delivery
+3. Status updates (confirmed, in-progress, delivered, cancelled)
+4. Full refunds for cancelled orders
+5. Fast, secure, and reliable
 
 # Quick Start
 
@@ -49,11 +59,11 @@ Each account on NEAR can have at most one contract deployed to it. If you've alr
 
 1. Authorize NEAR CLI, following the commands it gives you:
 
-   near login
+   `near login`
 
 2. Create a subaccount (replace `YOUR-NAME` below with your actual account name):
 
-   near create-account washkart.YOUR-NAME.testnet --masterAccount YOUR-NAME.testnet
+   `near create-account washkart.YOUR-NAME.testnet --masterAccount YOUR-NAME.testnet`
 
 ## Step 2: deploy the contract
 
