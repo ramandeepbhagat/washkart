@@ -23,6 +23,7 @@ export default function UserForm() {
     inputPhoneValue
   ) => {
     try {
+      setLoader(true);
       await createCustomer(
         inputNameValue,
         inputAddressValue,
@@ -56,6 +57,7 @@ export default function UserForm() {
     inputPhoneValue
   ) => {
     try {
+      setLoader(true);
       await updateCustomer(
         inputNameValue,
         inputAddressValue,
@@ -146,7 +148,7 @@ export default function UserForm() {
     } else {
       navigate(`/`);
     }
-  }, [window.walletConnection?.isSignedIn, user?.role, navigate]);
+  }, [window.walletConnection?.isSignedIn]);
 
   return (
     <form onSubmit={handleSubmit}>

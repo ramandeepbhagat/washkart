@@ -138,7 +138,8 @@ export async function fetchCustomerByAccountId(account_id) {
     });
     return response;
   } catch (error) {
-    return null;
+    console.error(`[fetchCustomerByAccountId] ${error?.message}`);
+    return { id: window.accountId, role: 1 };
   }
 }
 

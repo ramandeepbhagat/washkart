@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { signInWithNearWallet, signOutNearWallet } from "../near-api";
+import { AuthContext } from "../lib/Auth";
 
-export default function Header({ user }) {
+export default function Header() {
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="container">
       <header className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">

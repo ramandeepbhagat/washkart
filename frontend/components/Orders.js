@@ -2,16 +2,13 @@ import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { utils } from "near-api-js";
 import { AuthContext } from "../lib/Auth";
-import {
-  fetchOrdersByCustomerAccountId,
-  fetchOrderList,
-  updateOrderStatus,
-} from "../near-api";
+import { updateOrderStatus } from "../near-api";
 
 export default function Orders() {
   const { user, orders, setOrders, setLoader } = useContext(AuthContext);
 
   const handleStatusChange = async (status, order) => {
+    console.log("exec: handleStatusChange");
     try {
       if (user?.role === 2 && confirm("Are you sure?") == true) {
         setLoader(true);
@@ -37,45 +34,6 @@ export default function Orders() {
       setLoader(false);
     }
   };
-
-  const fetchOrdersForAdmin = async () => {
-    try {
-      const result = await fetchOrderList();
-      setOrders(result);
-    } catch (error) {
-      console.error(`[fetchOrdersForAdmin] ${error?.message}`);
-    } finally {
-      setLoader(false);
-    }
-  };
-
-  const fetchOrdersForCustomer = async () => {
-    try {
-      const result = await fetchOrdersByCustomerAccountId(user?.id);
-      setOrders(result);
-    } catch (error) {
-      console.error(`[fetchOrdersForCustomer] ${error?.message}`);
-    } finally {
-      setLoader(false);
-    }
-  };
-
-  const fetchOrders = async () => {
-    setLoader(true);
-    if (user?.role === 1) {
-      await fetchOrdersForCustomer();
-    } else if (user?.role === 2) {
-      await fetchOrdersForAdmin();
-    }
-  };
-
-  useEffect(() => {
-    if (window.walletConnection.isSignedIn()) {
-      (async () => {
-        await fetchOrders();
-      })();
-    }
-  }, [window.walletConnection.isSignedIn]);
 
   return (
     <div className="container">

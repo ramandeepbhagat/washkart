@@ -7,6 +7,7 @@ import {
   fetchCustomerByAccountId,
   getAdminList,
   fetchOrdersByCustomerAccountId,
+  fetchOrderList,
 } from "./near-api";
 import { AuthContext } from "./lib/Auth";
 
@@ -18,15 +19,17 @@ import OrderForm from "./components/OrderForm";
 import Feedback from "./components/Feedback";
 
 export default function App() {
-  const { user, setUser, setLoader, admins, setAdmins } =
+  const { user, setUser, setLoader, admins, setAdmins, setOrders } =
     useContext(AuthContext);
 
   const fetchCurrentUser = async () => {
+    console.log("exec: fetchCurrentUser");
     try {
+      setLoader(true);
       const result = await fetchCustomerByAccountId(window.accountId);
+      await fetchOrdersForCustomer();
       setUser(result);
     } catch (error) {
-      setUser({ id: window.accountId, role: 1 });
       console.error(`[fetchCurrentUser] ${error?.message}`);
     } finally {
       setLoader(false);
@@ -34,16 +37,46 @@ export default function App() {
   };
 
   const fetchAdmins = async () => {
+    console.log("exec: fetchAdmins");
     try {
       setLoader(true);
       const adminResult = await getAdminList();
       setAdmins(adminResult);
 
-      if (admins.includes(window.accountId)) {
-        setUser({ id: window.accountId, role: 2 });
+      if (adminResult.includes(window?.accountId)) {
+        setUser({ id: window?.accountId, role: 2 });
+        await fetchOrdersForAdmin();
+      } else {
+        await fetchCurrentUser();
       }
     } catch (error) {
       console.error(`[fetchAdmins] ${error?.message}`);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const fetchOrdersForAdmin = async () => {
+    console.log("exec: fetchOrdersForAdmin");
+    try {
+      setLoader(false);
+      const result = await fetchOrderList();
+      setOrders(result);
+    } catch (error) {
+      console.error(`[fetchOrdersForAdmin] ${error?.message}`);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const fetchOrdersForCustomer = async () => {
+    console.log("exec: fetchOrdersForCustomer");
+    try {
+      setLoader(false);
+      const result = await fetchOrdersByCustomerAccountId(window?.accountId);
+      setOrders(result);
+    } catch (error) {
+      console.error(`[fetchOrdersForCustomer] ${error?.message}`);
     } finally {
       setLoader(false);
     }
@@ -53,13 +86,9 @@ export default function App() {
     if (window?.walletConnection?.isSignedIn()) {
       (async () => {
         await fetchAdmins();
-
-        if (!admins.includes(window?.accountId)) {
-          await fetchCurrentUser();
-        }
       })();
     }
-  }, []);
+  }, [window.walletConnection.isSignedIn]);
 
   return (
     <>
