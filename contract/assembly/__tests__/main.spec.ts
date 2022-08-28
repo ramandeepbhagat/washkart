@@ -13,7 +13,6 @@ import {
   User,
   Order,
   OrderStatus,
-  Admin,
   adminsUmap,
   CustomerFeedback,
 } from "../model";
@@ -138,10 +137,20 @@ describe("Washkart Contract ", () => {
 
     call_create_order(order_id, "simple order", "2000", toYocto(3));
 
+    assert(ordersUmap.contains(order_id), "Order not found");
+
+    const order = ordersUmap.getSome(order_id);
+
+    VMContext.setSigner_account_id(admin_accountId);
+    order.deliverOrder();
+    ordersUmap.set(order_id, order);
+
+    VMContext.setSigner_account_id(customer_accountId);
     call_customer_feedback(order_id, "3", "good service");
 
     const updatedOrder: Order = ordersUmap.getSome(order_id);
 
+    expect(updatedOrder.status).toStrictEqual(OrderStatus.delivered);
     expect(updatedOrder.customerFeedback).toStrictEqual(CustomerFeedback.good);
     expect(updatedOrder.customerFeedbackComment).toStrictEqual("good service");
   });

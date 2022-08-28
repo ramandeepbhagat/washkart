@@ -101,7 +101,9 @@ export default function UserForm() {
       } = e.target.elements;
 
       const isFormValid =
-        !isEmpty(inputName.value) && !isEmpty(inputAddress.value);
+        !isEmpty(inputName.value) &&
+        !isEmpty(inputAddress.value) &&
+        !isEmpty(inputPhone.value);
 
       if (isFormValid) {
         if (!user?.name || !user?.fullAddress) {

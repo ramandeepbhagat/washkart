@@ -37,7 +37,7 @@ export async function initContract() {
     nearConfig.contractName,
     {
       // View methods are read only. They don't modify the state, but usually return some value.
-      viewMethods: ["about_project", "view_order_by_id", "view_admins"],
+      viewMethods: ["about_project", "view_admins"],
       // Change methods can modify the state. But you don't receive the returned value when called.
       changeMethods: [
         "call_create_customer",
@@ -47,6 +47,7 @@ export async function initContract() {
         "call_create_order",
         "call_update_order_status",
         "call_orders",
+        "call_order_by_id",
         "call_orders_by_customer_account_id",
         "call_customer_feedback",
       ],
@@ -75,7 +76,7 @@ export async function getProjectInfo() {
 }
 
 export async function getOrderById(order_id) {
-  let response = await window.contract.view_order_by_id({ order_id });
+  let response = await window.contract.call_order_by_id({ order_id });
   return response;
 }
 
