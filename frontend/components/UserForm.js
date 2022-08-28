@@ -40,7 +40,7 @@ export default function UserForm() {
       console.log("customer created");
       navigate(`/`);
     } catch (error) {
-      console.log(error?.message);
+      console.error(`[saveCustomer] ${error?.message}`);
       alert(`[saveCustomer] Error: \n${error?.message}`);
     } finally {
       setLoader(false);
@@ -73,7 +73,7 @@ export default function UserForm() {
       console.log("customer updated");
       navigate(`/`);
     } catch (error) {
-      console.log(error?.message);
+      console.error(`[editCustomer] ${error?.message}`);
       alert(`[editCustomer] Error: \n${error?.message}`);
     } finally {
       setLoader(false);
@@ -126,13 +126,14 @@ export default function UserForm() {
           );
         }
       } else {
-        console.log("invalid_input");
-        alert("Name, phone and address are required.");
         setLoader(false);
+        console.error(`Name, phone and address are required`);
+        alert("Name, phone and address are required.");
         return;
       }
     } else {
-      console.log("You must be logged in");
+      setLoader(false);
+      console.error("You must be logged in");
       alert("You must be logged in");
     }
   };
@@ -145,7 +146,7 @@ export default function UserForm() {
     } else {
       navigate(`/`);
     }
-  }, [window.walletConnection.isSignedIn]);
+  }, [window.walletConnection?.isSignedIn, user?.role, navigate]);
 
   return (
     <form onSubmit={handleSubmit}>

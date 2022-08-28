@@ -40,20 +40,34 @@ export default function Orders() {
     }
   };
 
-  const fetchOrders = async () => {
+  const fetchOrdersForAdmin = async () => {
     try {
-      if (user?.role === 1) {
-        const result = await fetchOrdersByCustomerAccountId(user?.id);
-        setOrders(result);
-      } else if (user?.role === 2) {
-        const result = await fetchOrderList();
-        setOrders(result);
-      }
+      const result = await fetchOrderList();
+      setOrders(result);
     } catch (error) {
-      console.log(error.message);
-      alert(`fetchOrders Error: \n${error?.message}`);
+      console.error(`[fetchOrdersForAdmin] ${error?.message}`);
     } finally {
       setLoader(false);
+    }
+  };
+
+  const fetchOrdersForCustomer = async () => {
+    try {
+      const result = await fetchOrdersByCustomerAccountId(user?.id);
+      setOrders(result);
+    } catch (error) {
+      console.error(`[fetchOrdersForCustomer] ${error?.message}`);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const fetchOrders = async () => {
+    setLoader(true);
+    if (user?.role === 1) {
+      await fetchOrdersForCustomer();
+    } else if (user?.role === 2) {
+      await fetchOrdersForAdmin();
     }
   };
 

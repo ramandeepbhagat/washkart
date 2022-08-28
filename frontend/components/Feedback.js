@@ -99,6 +99,7 @@ export default function Feedback() {
     }
   }, [
     window.walletConnection.isSignedIn,
+    navigate,
     setOrder,
     setFeedbackRating,
     setFeedbackComment,

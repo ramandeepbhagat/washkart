@@ -38,11 +38,11 @@ export default function OrderForm() {
         return false;
       }
 
-      if (!user?.fullAddress) {
+      if (!user?.fullAddress || !user?.phone) {
         alert(
           "Please update account information before attempting to create an order."
         );
-        console.log(
+        console.error(
           "Please update account information before attempting to create an order."
         );
         return;
@@ -67,17 +67,18 @@ export default function OrderForm() {
           alert("order created");
           console.log("order created");
         } catch (error) {
-          console.log(error?.message);
-          alert(`Error: \n${error?.message}`);
+          console.error(`[createOrder] ${error?.message}`);
+          alert(`[createOrder] Error: \n${error?.message}`);
         } finally {
           setLoader(false);
         }
       } else {
-        console.log("invalid_input");
+        console.error("invalid_input");
+        alert("Invalid input");
         return;
       }
     } else {
-      console.log("You must be logged in");
+      console.error("You must be logged in");
       alert("You must be logged in");
     }
   };
@@ -86,7 +87,7 @@ export default function OrderForm() {
     if (!window.walletConnection.isSignedIn()) {
       navigate(`/`);
     }
-  }, [window.walletConnection.isSignedIn]);
+  }, [window.walletConnection.isSignedIn, navigate]);
 
   return (
     <form onSubmit={handleSubmit}>
