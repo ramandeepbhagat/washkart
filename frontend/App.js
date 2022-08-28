@@ -59,12 +59,7 @@ export default function App() {
         }
       })();
     }
-  }, [
-    window.walletConnection.isSignedIn,
-    window.accountId,
-    fetchAdmins,
-    fetchCurrentUser,
-  ]);
+  }, []);
 
   return (
     <>

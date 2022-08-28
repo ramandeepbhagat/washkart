@@ -75,7 +75,7 @@ export default function Orders() {
         await fetchOrders();
       })();
     }
-  }, [window.walletConnection.isSignedIn, fetchOrders]);
+  }, [window.walletConnection.isSignedIn]);
 
   return (
     <div className="container">
