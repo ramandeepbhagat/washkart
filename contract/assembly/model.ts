@@ -1,5 +1,6 @@
 import { PersistentUnorderedMap, PersistentVector } from "near-sdk-core";
 import { AccountId, Amount, Timestamp } from "./utils";
+import {context} from "near-sdk-as";
 
 /**
  * all available order statuses
@@ -44,10 +45,10 @@ export class Admin {
   created: Timestamp;
   updated: Timestamp;
 
-  constructor(id: AccountId, created: Timestamp, updated: Timestamp) {
+  constructor(id: AccountId) {
     this.id = id;
-    this.created = created;
-    this.updated = updated;
+    this.created = context.blockTimestamp;
+    this.updated = context.blockTimestamp;
   }
 }
 
@@ -74,9 +75,6 @@ export class User {
     phone: string,
     email: string,
     role: UserRole,
-    orderIds: PersistentVector<OrderId>,
-    created: Timestamp,
-    updated: Timestamp
   ) {
     this.id = id;
     this.name = name;
@@ -86,9 +84,26 @@ export class User {
     this.phone = phone;
     this.email = email;
     this.role = role;
-    this.orderIds = orderIds;
-    this.created = created;
-    this.updated = updated;
+    this.orderIds = new PersistentVector<OrderId>("co:" + id);
+    this.created = context.blockTimestamp;
+    this.updated = context.blockTimestamp;
+  }
+
+  public updateCustomter(
+      name: string,
+      fullAddress: string,
+      landmark: string,
+      googlePlusCodeAddress: string,
+      phone: string,
+      email: string,
+  ) {
+    this.name = name;
+    this.fullAddress = fullAddress;
+    this.landmark = landmark;
+    this.googlePlusCodeAddress = googlePlusCodeAddress;
+    this.phone = phone;
+    this.email = email;
+    this.updated = context.blockTimestamp;
   }
 }
 
@@ -97,7 +112,7 @@ export class Order {
   id: OrderId;
   customerId: AccountId;
   description: string;
-  weightInGrams: i32;
+  weightInGrams: u32;
   priceInYoctoNear: Amount;
   paymentType: PaymentType = PaymentType.prepaid;
   status: OrderStatus = OrderStatus.confirmed;
@@ -110,13 +125,12 @@ export class Order {
     id: OrderId,
     customerId: AccountId,
     description: string,
-    weightInGrams: i32,
+    weightInGrams: u32,
     paymentType: PaymentType,
     priceInYoctoNear: Amount,
     status: OrderStatus,
     customerFeedback: CustomerFeedback,
     customerFeedbackComment: string,
-    pickupDateTime: Timestamp,
     deliveryDateTime: Timestamp
   ) {
     this.id = id;
@@ -128,8 +142,22 @@ export class Order {
     this.status = status;
     this.customerFeedback = customerFeedback;
     this.customerFeedbackComment = customerFeedbackComment;
-    this.pickupDateTime = pickupDateTime;
+    this.pickupDateTime = context.blockTimestamp;
     this.deliveryDateTime = deliveryDateTime;
+  }
+
+  public deliverOrder(){
+    this.status = OrderStatus.delivered;
+    this.deliveryDateTime = context.blockTimestamp;
+  }
+
+  public updateStatus(status: OrderStatus) {
+    this.status = status;
+  }
+
+  public addFeedback(customer_feedback: string, customer_feedback_comment: string) {
+    this.customerFeedback = parseInt(customer_feedback, 10);
+    this.customerFeedbackComment = customer_feedback_comment;
   }
 }
 
