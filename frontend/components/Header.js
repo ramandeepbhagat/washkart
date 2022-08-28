@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { signInWithNearWallet, signOutNearWallet } from "../near-api";
 import { AuthContext } from "../lib/Auth";
@@ -53,7 +53,7 @@ export default function Header() {
             </button>
           ) : (
             <>
-              <span className="fs-6 me-2">{window?.account_id}</span>
+              <span className="fs-6 me-2">{user?.id}</span>
               <button
                 type="button"
                 className="btn btn-sm btn-outline-danger"

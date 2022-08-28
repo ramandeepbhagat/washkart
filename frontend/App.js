@@ -39,6 +39,7 @@ export default function App() {
   const fetchAdmins = async () => {
     console.log("exec: fetchAdmins");
     try {
+      setUser({ id: window?.accountId });
       setLoader(true);
       const adminResult = await getAdminList();
       setAdmins(adminResult);
