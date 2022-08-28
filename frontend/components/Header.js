@@ -53,7 +53,7 @@ export default function Header() {
             </button>
           ) : (
             <>
-              <span className="fs-6 me-2">{user?.id}</span>
+              <span className="fs-6 me-2">{window?.account_id}</span>
               <button
                 type="button"
                 className="btn btn-sm btn-outline-danger"
