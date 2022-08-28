@@ -127,6 +127,7 @@ export default function UserForm() {
         }
       } else {
         console.log("invalid_input");
+        alert("Name, phone and address are required.");
         return;
       }
     } else {
