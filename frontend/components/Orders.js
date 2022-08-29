@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { utils } from "near-api-js";
 import { AuthContext } from "../lib/Auth";
@@ -37,9 +37,14 @@ export default function Orders() {
 
   return (
     <div className="container">
+      <div className="d-flex justify-content-between align-items-center">
+        <h5>List of orders</h5>
+        <Link to="/o/new" className="btn btn-sm px-2 btn-success">
+          New order
+        </Link>
+      </div>
       <div className="table-responsive">
         <table className="table caption-top">
-          <caption>List of orders</caption>
           <thead>
             <tr>
               <th scope="col">OrderId</th>

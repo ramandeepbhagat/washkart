@@ -17,6 +17,7 @@ import Home from "./components/Home";
 import UserForm from "./components/UserForm";
 import OrderForm from "./components/OrderForm";
 import Feedback from "./components/Feedback";
+import ProjectDemo from "./components/ProjectDemo";
 
 export default function App() {
   const { user, setUser, setLoader, setAdmins, setOrders } =
@@ -103,6 +104,7 @@ export default function App() {
         <Routes>
           <Route path="*" element={<Home />} />
           <Route path="account" element={<UserForm />} />
+          <Route path="about" element={<ProjectDemo />} />
           <Route path="o/new" element={<OrderForm />} />
           <Route path="o/:orderId" element={<Feedback />} />
         </Routes>

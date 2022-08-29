@@ -2,10 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { utils } from "near-api-js";
 import { AuthContext } from "../lib/Auth";
-import {
-  submitCustomerFeedbackByOrderId,
-  fetchOrdersByCustomerAccountId,
-} from "../near-api";
+import { submitCustomerFeedbackByOrderId } from "../near-api";
 
 export default function Feedback() {
   let { orderId } = useParams();

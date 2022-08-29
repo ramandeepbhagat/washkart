@@ -11,14 +11,14 @@ export default function Header() {
       <header className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
         <Link
           to="/"
-          className="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none"
+          className="d-flex align-items-center col-md-2 mb-2 mb-md-0 text-dark text-decoration-none"
         >
           <span className="fs-4">Washkart</span>
         </Link>
 
         <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
           <li>
-            <Link to="/" className="nav-link px-2 link-secondary">
+            <Link to="/" className="btn btn-sm nav-link px-2 link-secondary">
               Home
             </Link>
           </li>
@@ -26,16 +26,19 @@ export default function Header() {
           {user?.role != 2 && (
             <>
               <li>
-                <Link to="/account" className="nav-link px-2 link-dark">
+                <Link
+                  to="/account"
+                  className="btn btn-sm nav-link px-2 link-dark"
+                >
                   Account
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/o/new"
-                  className=" btn btn-sm nav-link px-2 link-success"
+                  to="/about"
+                  className="btn btn-sm nav-link px-2 link-dark"
                 >
-                  New Order
+                  About
                 </Link>
               </li>
             </>

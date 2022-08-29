@@ -13,12 +13,8 @@ export default function Home() {
         alt="banner image"
       ></img>
 
-      <div className="my-2 px-2">
-        <h4>
-          <a href="https://github.com/ramandeepbhagat/washkart" target="_blank">
-            Source code
-          </a>
-        </h4>
+      <div className="my-2">
+        <h6>Developed by Ramandeep Bhagat</h6>
       </div>
     </div>
   );
