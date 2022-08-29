@@ -19,11 +19,11 @@ import OrderForm from "./components/OrderForm";
 import Feedback from "./components/Feedback";
 
 export default function App() {
-  const { user, setUser, setLoader, admins, setAdmins, setOrders } =
+  const { user, setUser, setLoader, setAdmins, setOrders } =
     useContext(AuthContext);
 
   const fetchCurrentUser = async () => {
-    console.log("exec: fetchCurrentUser");
+    console.log("exec: [fetchCurrentUser]");
     try {
       setLoader(true);
       const result = await fetchCustomerByAccountId(window.accountId);
@@ -31,13 +31,14 @@ export default function App() {
       setUser(result);
     } catch (error) {
       console.error(`[fetchCurrentUser] ${error?.message}`);
-    } finally {
       setLoader(false);
+    } finally {
+      console.log("finally: [fetchCurrentUser]");
     }
   };
 
   const fetchAdmins = async () => {
-    console.log("exec: fetchAdmins");
+    console.log("exec: [fetchAdmins]");
     try {
       setUser({ id: window?.accountId });
       setLoader(true);
@@ -54,32 +55,35 @@ export default function App() {
       console.error(`[fetchAdmins] ${error?.message}`);
     } finally {
       setLoader(false);
+      console.log("finally: [fetchAdmins]");
     }
   };
 
   const fetchOrdersForAdmin = async () => {
-    console.log("exec: fetchOrdersForAdmin");
+    console.log("exec: [fetchOrdersForAdmin]");
     try {
-      setLoader(false);
+      setLoader(true);
       const result = await fetchOrderList();
       setOrders(result);
     } catch (error) {
+      setLoader(false);
       console.error(`[fetchOrdersForAdmin] ${error?.message}`);
     } finally {
-      setLoader(false);
+      console.log("finally: [fetchOrdersForAdmin]");
     }
   };
 
   const fetchOrdersForCustomer = async () => {
-    console.log("exec: fetchOrdersForCustomer");
+    console.log("exec: [fetchOrdersForCustomer]");
     try {
-      setLoader(false);
+      setLoader(true);
       const result = await fetchOrdersByCustomerAccountId(window?.accountId);
       setOrders(result);
     } catch (error) {
+      setLoader(false);
       console.error(`[fetchOrdersForCustomer] ${error?.message}`);
     } finally {
-      setLoader(false);
+      console.log("finally: [fetchOrdersForCustomer]");
     }
   };
 

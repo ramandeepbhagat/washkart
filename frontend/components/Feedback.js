@@ -23,10 +23,10 @@ export default function Feedback() {
   });
 
   const [feedbackRating, setFeedbackRating] = useState(
-    order?.feedbackRating || 1
+    order?.customerFeedback || 1
   );
   const [feedbackComment, setFeedbackComment] = useState(
-    order?.feedbackComment || ""
+    order?.customerFeedbackComment || ""
   );
 
   const handleSubmit = async (e) => {
@@ -57,16 +57,14 @@ export default function Feedback() {
           inputFeedbackComment?.value
         );
 
-        const result = await fetchOrdersByCustomerAccountId(window?.accountId);
-        setOrders(result);
-
-        const updatedOrder = {
-          ...order,
-          customerFeedback: inputRating?.value,
-          customerFeedbackComment: inputFeedbackComment?.value,
-        };
-        setOrder(updatedOrder);
-
+        const updatedOrders = orders.map((o) => {
+          if (o?.id === orderId) {
+            o.customerFeedback = inputRating?.value;
+            o.customerFeedbackComment = inputFeedbackComment?.value;
+          }
+          return o;
+        });
+        setOrders(updatedOrders);
         alert("Feedback submitted");
         console.log("Feedback submitted");
       } catch (error) {
@@ -86,10 +84,11 @@ export default function Feedback() {
       if (orders?.length) {
         setLoader(true);
         const found = orders.find((o) => o?.id == orderId);
+
         if (found) {
-          setOrder({ ...found });
-          setFeedbackRating(order?.customerFeedback);
-          setFeedbackComment(order?.customerFeedbackComment);
+          setOrder(Object.assign({}, order, found));
+          setFeedbackRating(found?.customerFeedback);
+          setFeedbackComment(found?.customerFeedbackComment);
         }
         setLoader(false);
       }
