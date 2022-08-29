@@ -6,11 +6,16 @@ Demo link: https://washkart.vercel.app/
 
 App features:
 
-1. Role-based access control (customer, admin)
-2. Free pickup and delivery
-3. Status updates (confirmed, in-progress, delivered, cancelled)
-4. Full refunds for cancelled orders
-5. Fast, secure, and reliable
+1. Role-based access control (customer, admin).
+2. Free pickup and delivery.
+3. Status updates (confirmed, in progress, delivered, canceled).
+4. Full refunds for canceled orders.
+5. Customer feedback form.
+6. Fast, secure, and reliable.
+
+# Watch Video
+
+[![loom](https://cdn.loom.com/sessions/thumbnails/2f5a294a7f1b45af8318233c22a75a86-with-play.gif)](https://www.loom.com/share/2f5a294a7f1b45af8318233c22a75a86)
 
 # Quick Start
 
