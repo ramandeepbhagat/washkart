@@ -199,7 +199,7 @@ export default function Feedback() {
           {order?.status === 3 && (
             <>
               <h4>Feedback Form</h4>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={(e) => loader == false && handleSubmit(e)}>
                 <div className="mb-3">
                   <label htmlFor="inputRating" className="form-label">
                     Rating

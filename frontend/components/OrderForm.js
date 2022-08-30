@@ -48,8 +48,6 @@ export default function OrderForm() {
         return;
       }
 
-      setLoader(true);
-
       const { inputDescription, inputWeight } = e.target.elements;
 
       const isFormValid =
@@ -57,6 +55,7 @@ export default function OrderForm() {
 
       if (isFormValid) {
         try {
+          setLoader(true);
           await createOrder(
             nanoid(),
             inputDescription.value,
@@ -90,7 +89,7 @@ export default function OrderForm() {
   }, [window.walletConnection.isSignedIn, navigate]);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e) => loader == false && handleSubmit(e)}>
       <div className="form-floating mb-3">
         <textarea
           type="text"

@@ -5,7 +5,8 @@ import { AuthContext } from "../lib/Auth";
 import { updateOrderStatus } from "../near-api";
 
 export default function Orders() {
-  const { user, orders, setOrders, setLoader } = useContext(AuthContext);
+  const { user, orders, setOrders, loader, setLoader } =
+    useContext(AuthContext);
 
   const handleStatusChange = async (status, order) => {
     console.log("exec: handleStatusChange");
@@ -73,7 +74,10 @@ export default function Orders() {
                       className="form-select form-select-sm"
                       aria-label=".form-select-sm"
                       value={o?.status}
-                      onChange={(e) => handleStatusChange(e?.target?.value, o)}
+                      onChange={(e) =>
+                        loader == false &&
+                        handleStatusChange(e?.target?.value, o)
+                      }
                     >
                       <option value={1}>Confirmed</option>
                       <option value={2}>In Progress</option>

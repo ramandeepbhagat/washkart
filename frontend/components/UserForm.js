@@ -151,7 +151,7 @@ export default function UserForm() {
   }, [window.walletConnection?.isSignedIn]);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e) => loader == false && handleSubmit(e)}>
       <div className="form-floating mb-3">
         <input
           type="text"
