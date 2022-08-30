@@ -39,7 +39,7 @@ export default function Orders() {
     <div className="container">
       <div className="d-flex justify-content-between align-items-center">
         <h5>List of orders</h5>
-        <Link to="/o/new" className="btn btn-sm px-2 btn-success">
+        <Link to="/new" className="btn btn-sm px-2 btn-success">
           New order
         </Link>
       </div>
@@ -61,7 +61,7 @@ export default function Orders() {
               return (
                 <tr key={o?.id}>
                   <td>
-                    <Link to={`/o/${o?.id}`}>{o?.id}</Link>
+                    <Link to={`/${o?.id}`}>{o?.id}</Link>
                   </td>
                   {user?.role === 2 && <td>{o?.customerId}</td>}
                   <td>{o?.paymentType === 1 ? "Prepaid" : ""}</td>

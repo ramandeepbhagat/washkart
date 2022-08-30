@@ -101,12 +101,12 @@ export default function App() {
       <Header user={user} />
       <main className="container mb-4">
         {window.walletConnection.isSignedIn() && <Spinner />}
-        <Routes>
-          <Route path="*" element={<Home />} />
+        <Routes path="/" element={<Home />}>
           <Route path="account" element={<UserForm />} />
           <Route path="about" element={<ProjectDemo />} />
-          <Route path="o/new" element={<OrderForm />} />
-          <Route path="o/:orderId" element={<Feedback />} />
+          <Route path="new" element={<OrderForm />} />
+          <Route path=":orderId" element={<Feedback />} />
+          <Route path="*" element={<Home />} />
         </Routes>
       </main>
     </>
