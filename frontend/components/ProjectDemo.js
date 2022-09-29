@@ -3,12 +3,7 @@ import React from "react";
 export default function ProjectDemo() {
   return (
     <>
-      <h1>
-        Project video -
-        <a href="https://github.com/ramandeepbhagat/washkart" target="_blank">
-          &nbsp;Source code
-        </a>
-      </h1>
+      <h1>Project video</h1>
       <div className="my-3">
         <a
           href="https://www.loom.com/share/2f5a294a7f1b45af8318233c22a75a86"
