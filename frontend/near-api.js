@@ -76,7 +76,10 @@ export async function getProjectInfo() {
 }
 
 export async function getOrderById(order_id) {
-  let response = await window.contract.call_order_by_id({ order_id });
+  let response = await window.contract.call_order_by_id({
+    args: { order_id },
+    gas: "300000000000000000000000000",
+  });
   return response;
 }
 
@@ -95,12 +98,15 @@ export async function createCustomer(
   phone
 ) {
   const response = await window.contract.call_create_customer({
-    name,
-    full_address,
-    landmark,
-    google_plus_code_address,
-    email,
-    phone,
+    args: {
+      name,
+      full_address,
+      landmark,
+      google_plus_code_address,
+      email,
+      phone,
+    },
+    gas: "300000000000000000000000000",
   });
   return response;
 }
@@ -114,12 +120,15 @@ export async function updateCustomer(
   phone
 ) {
   const response = await window.contract.call_update_customer({
-    name: name,
-    full_address: full_address,
-    landmark: landmark,
-    google_plus_code_address: google_plus_code_address,
-    email: email,
-    phone: phone,
+    args: {
+      name: name,
+      full_address: full_address,
+      landmark: landmark,
+      google_plus_code_address: google_plus_code_address,
+      email: email,
+      phone: phone,
+    },
+    gas: "300000000000000000000000000",
   });
   return response;
 }
@@ -134,7 +143,8 @@ export async function fetchCustomerList() {
 export async function fetchCustomerByAccountId(account_id) {
   try {
     const response = await window.contract.call_customer_by_account_id({
-      account_id,
+      args: { account_id },
+      gas: "300000000000000000000000000",
     });
     return response;
   } catch (error) {
@@ -163,7 +173,7 @@ export async function createOrder(
       weight_in_grams,
       price_in_yocto_near,
     },
-    gas: "300000000000000", // attached GAS
+    gas: "300000000000000000000000000", // attached GAS
     amount: price_in_yocto_near, // attached deposit in yoctoNEAR
   });
   return response;
@@ -171,8 +181,8 @@ export async function createOrder(
 
 export async function updateOrderStatus(order_id, order_status) {
   const response = await window.contract.call_update_order_status({
-    order_id,
-    order_status,
+    args: { order_id, order_status },
+    gas: "300000000000000000000000000",
   });
   return response;
 }
@@ -186,7 +196,8 @@ export async function fetchOrderList() {
 
 export async function fetchOrdersByCustomerAccountId(customer_account_id) {
   const response = await window.contract.call_orders_by_customer_account_id({
-    customer_account_id,
+    args: { customer_account_id },
+    gas: "300000000000000000000000000",
   });
   return response;
 }
@@ -197,9 +208,8 @@ export async function submitCustomerFeedbackByOrderId(
   customer_feedback_comment
 ) {
   const response = await window.contract.call_customer_feedback({
-    order_id,
-    customer_feedback,
-    customer_feedback_comment,
+    args: { order_id, customer_feedback, customer_feedback_comment },
+    gas: "300000000000000000000000000",
   });
   return response;
 }
