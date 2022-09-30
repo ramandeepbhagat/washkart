@@ -24,7 +24,7 @@
     "bootstrap": "^5.2.0",
     "buffer": "^6.0.3",
     "nanoid": "^4.0.0",
-    "near-api-js": "^0.44.2",
+    "near-api-js": "^1.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
