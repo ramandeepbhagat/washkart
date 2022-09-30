@@ -136,6 +136,7 @@ export async function updateCustomer(
 export async function fetchCustomerList() {
   const response = await window.contract.call_customers({
     args: {},
+    gas: "900000000000000",
   });
   return response;
 }
@@ -190,6 +191,7 @@ export async function updateOrderStatus(order_id, order_status) {
 export async function fetchOrderList() {
   const response = await window.contract.call_orders({
     args: {},
+    gas: "900000000000000",
   });
   return response;
 }
