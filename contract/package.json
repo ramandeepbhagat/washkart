@@ -8,7 +8,7 @@
     "test": "asp --nologo --verbose"
   },
   "dependencies": {
-    "near-cli": "^3.3.0",
+    "near-cli": "^3.4.2",
     "near-sdk-as": "^3.2.3"
   }
 }

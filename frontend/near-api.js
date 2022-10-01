@@ -17,24 +17,27 @@ export async function initContract() {
 
   const near = await connect(
     Object.assign(
-      { deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() } },
+      { keyStore: new keyStores.BrowserLocalStorageKeyStore() },
       nearConfig
     )
   );
 
   // Initializing Wallet based Account. It can work with NEAR testnet wallet that
   // is hosted at https://wallet.testnet.near.org
-  window.walletConnection = new WalletConnection(near);
+  const walletConnection = new WalletConnection(near);
+  window.walletConnection = walletConnection;
 
   // Getting the Account ID. If still unauthorized, it's just empty string
-  window.accountId = window.walletConnection.getAccountId();
+  const accountId = window.walletConnection.getAccountId();
+  window.accountId = accountId;
 
-  window.contractName = nearConfig.contractName;
+  const contractName = nearConfig.contractName;
+  window.contractName = contractName;
 
   // Initializing our contract APIs by contract name and configuration
-  window.contract = await new Contract(
+  const contract = new Contract(
     window.walletConnection.account(),
-    nearConfig.contractName,
+    contractName,
     {
       // View methods are read only. They don't modify the state, but usually return some value.
       viewMethods: ["about_project", "view_admins"],
@@ -51,8 +54,13 @@ export async function initContract() {
         "call_orders_by_customer_account_id",
         "call_customer_feedback",
       ],
+      sender: accountId,
     }
   );
+
+  window.contract = contract;
+
+  return { contract, walletConnection };
 }
 
 export function signOutNearWallet() {
@@ -66,7 +74,10 @@ export function signInWithNearWallet() {
   // user's behalf.
   // This works by creating a new access key for the user's account and storing
   // the private key in localStorage.
-  window.walletConnection.requestSignIn(nearConfig.contractName);
+  window.walletConnection.requestSignIn(
+    nearConfig.contractName,
+    "Washkart App"
+  );
 }
 
 // view functions
@@ -78,7 +89,7 @@ export async function getProjectInfo() {
 export async function getOrderById(order_id) {
   let response = await window.contract.call_order_by_id({
     args: { order_id },
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }
@@ -106,7 +117,7 @@ export async function createCustomer(
       email,
       phone,
     },
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }
@@ -128,7 +139,7 @@ export async function updateCustomer(
       email: email,
       phone: phone,
     },
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }
@@ -136,17 +147,18 @@ export async function updateCustomer(
 export async function fetchCustomerList() {
   const response = await window.contract.call_customers({
     args: {},
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }
 
 export async function fetchCustomerByAccountId(account_id) {
   try {
-    const response = await window.contract.call_customer_by_account_id({
-      args: { account_id },
-      gas: "900000000000000",
-    });
+    console.log("fetchCustomerByAccountId");
+    const response = await window.contract.call_customer_by_account_id(
+      { account_id },
+      "300000000000000"
+    );
     return response;
   } catch (error) {
     console.error(`[fetchCustomerByAccountId] ${error?.message}`);
@@ -174,7 +186,7 @@ export async function createOrder(
       weight_in_grams,
       price_in_yocto_near,
     },
-    gas: "900000000000000", // attached GAS
+    gas: "300000000000000", // attached GAS
     amount: price_in_yocto_near, // attached deposit in yoctoNEAR
   });
   return response;
@@ -183,7 +195,7 @@ export async function createOrder(
 export async function updateOrderStatus(order_id, order_status) {
   const response = await window.contract.call_update_order_status({
     args: { order_id, order_status },
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }
@@ -191,7 +203,7 @@ export async function updateOrderStatus(order_id, order_status) {
 export async function fetchOrderList() {
   const response = await window.contract.call_orders({
     args: {},
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }
@@ -199,7 +211,7 @@ export async function fetchOrderList() {
 export async function fetchOrdersByCustomerAccountId(customer_account_id) {
   const response = await window.contract.call_orders_by_customer_account_id({
     args: { customer_account_id },
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }
@@ -211,7 +223,7 @@ export async function submitCustomerFeedbackByOrderId(
 ) {
   const response = await window.contract.call_customer_feedback({
     args: { order_id, customer_feedback, customer_feedback_comment },
-    gas: "900000000000000",
+    gas: "300000000000000",
   });
   return response;
 }

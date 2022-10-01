@@ -8,11 +8,11 @@ import { AuthProvider } from "./lib/Auth";
 const reactRoot = createRoot(document.querySelector("#root"));
 
 window.nearInitPromise = initContract()
-  .then(() => {
+  .then(({ contract, walletConnection }) => {
     reactRoot.render(
       <AuthProvider>
         <BrowserRouter>
-          <App />
+          <App contract={contract} walletConnection={walletConnection} />
         </BrowserRouter>
       </AuthProvider>
     );

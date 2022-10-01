@@ -17,15 +17,15 @@ Before you compile this code, you will need to install [Node.js] ≥ 16
 
 ## 1. Create a sub-account
 
-`near create-account washkart.YOUR-NAME.testnet --masterAccount YOUR-NAME.testnet --initialBalance 100`
+`near create-account test.millefolium.testnet --masterAccount millefolium.testnet --initialBalance 100`
 
 ## 2. Deploy the contract
 
-`near deploy --accountId washkart.YOUR-NAME.testnet --wasmFile ./contract/build/release/washkart.wasm --initFunction init --initArgs '{"admin_account_id": "YOUR-NAME.testnet"}'`
+`near deploy --accountId test.millefolium.testnet --wasmFile ./contract/build/release/washkart.wasm --initFunction init --initArgs '{"admin_account_id": "millefolium.testnet"}'`
 
 ## 3. View list of admins
 
-`near view washkart.YOUR-NAME.testnet view_admins`
+`near view test.millefolium.testnet view_admins`
 
 ## 4. Create a new customer
 
@@ -41,7 +41,7 @@ Before you compile this code, you will need to install [Node.js] ≥ 16
 
 ## 7. Get a customer by accountId
 
-`near call washkart.YOUR-NAME.testnet call_customer_by_account_id '{"account_id": "YOUR_ANOTHER_NAME.testnet"}' --accountId YOUR-NAME.testnet`
+`near call test.millefolium.testnet call_customer_by_account_id '{"account_id": "envoy.testnet"}' --accountId millefolium.testnet`
 
 ## 8. Create an order
 
@@ -65,4 +65,4 @@ Before you compile this code, you will need to install [Node.js] ≥ 16
 
 ## 13. Delete sub-account
 
-`near delete washkart.YOUR-NAME.testnet YOUR-NAME.testnet`
+`near delete test.millefolium.testnet millefolium.testnet`

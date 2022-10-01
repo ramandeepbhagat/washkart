@@ -19,7 +19,7 @@ import OrderForm from "./components/OrderForm";
 import Feedback from "./components/Feedback";
 import ProjectDemo from "./components/ProjectDemo";
 
-export default function App() {
+export default function App({ contract, walletConnection }) {
   const { user, setUser, setLoader, setAdmins, setOrders } =
     useContext(AuthContext);
 
@@ -28,8 +28,8 @@ export default function App() {
     try {
       setLoader(true);
       const result = await fetchCustomerByAccountId(window.accountId);
-      await fetchOrdersForCustomer();
-      setUser(result);
+      // await fetchOrdersForCustomer();
+      // setUser(result);
     } catch (error) {
       console.error(`[fetchCurrentUser] ${error?.message}`);
       setLoader(false);
