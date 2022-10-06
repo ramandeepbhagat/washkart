@@ -6,13 +6,15 @@ import { providers } from "near-api-js";
 // wallet selector UI
 import "@near-wallet-selector/modal-ui/styles.css";
 import { setupModal } from "@near-wallet-selector/modal-ui";
-import LedgerIconUrl from "@near-wallet-selector/ledger/assets/ledger-icon.png";
+// import LedgerIconUrl from "@near-wallet-selector/ledger/assets/ledger-icon.png";
 import MyNearIconUrl from "@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png";
+import NearIconUrl from "@near-wallet-selector/near-wallet/assets/near-wallet-icon.png";
 
 // wallet selector options
 import { setupWalletSelector } from "@near-wallet-selector/core";
-import { setupLedger } from "@near-wallet-selector/ledger";
+// import { setupLedger } from "@near-wallet-selector/ledger";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
+import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 
 const THREE_HUNDRED_TGAS = "300000000000000";
 const NO_DEPOSIT = "0";
@@ -39,7 +41,11 @@ export class Wallet {
       network: this.network,
       modules: [
         setupMyNearWallet({ iconUrl: MyNearIconUrl }),
-        setupLedger({ iconUrl: LedgerIconUrl }),
+        setupNearWallet({
+          iconUrl: NearIconUrl,
+          walletUrl: "https://wallet.testnet.near.org",
+        }),
+        // setupLedger({ iconUrl: LedgerIconUrl }),
       ],
     });
 
