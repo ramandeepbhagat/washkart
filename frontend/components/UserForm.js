@@ -1,17 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  fetchCustomerByAccountId,
-  createCustomer,
-  updateCustomer,
-} from "../near-api";
 
 import { AuthContext } from "../lib/Auth";
-
 import { isEmpty } from "../lib/utils";
 
 export default function UserForm() {
-  const { user, setUser, loader, setLoader } = useContext(AuthContext);
+  const { user, setUser, loader, setLoader, contract, isAdmin, isSignedIn } =
+    useContext(AuthContext);
   const navigate = useNavigate();
 
   const saveCustomer = async (
@@ -24,7 +19,7 @@ export default function UserForm() {
   ) => {
     try {
       setLoader(true);
-      await createCustomer(
+      await contract.createCustomer(
         inputNameValue,
         inputAddressValue,
         inputLandmarkValue,
@@ -33,7 +28,7 @@ export default function UserForm() {
         inputPhoneValue
       );
 
-      const result = await fetchCustomerByAccountId(window.accountId);
+      const result = await contract.fetchCustomerByAccountId(window.accountId);
       setUser(result);
       console.log("customer", result);
 
@@ -50,24 +45,24 @@ export default function UserForm() {
 
   const editCustomer = async (
     inputNameValue,
+    inputPhoneValue,
+    inputEmailValue,
     inputAddressValue,
     inputLandmarkValue,
-    googlePlusCodeAddressValue,
-    inputEmailValue,
-    inputPhoneValue
+    googlePlusCodeAddressValue
   ) => {
     try {
       setLoader(true);
-      await updateCustomer(
+      await contract.updateCustomer(
         inputNameValue,
+        inputPhoneValue,
+        inputEmailValue,
         inputAddressValue,
         inputLandmarkValue,
-        googlePlusCodeAddressValue,
-        inputEmailValue,
-        inputPhoneValue
+        googlePlusCodeAddressValue
       );
 
-      const result = await fetchCustomerByAccountId(window.accountId);
+      const result = await contract.fetchCustomerByAccountId(window.accountId);
       setUser(result);
       console.log("customer", result);
 
@@ -85,7 +80,11 @@ export default function UserForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (window.walletConnection.isSignedIn()) {
+    if (isAdmin) {
+      return;
+    }
+
+    if (isSignedIn) {
       if (confirm("Are you sure?") != true) {
         console.log("action cancelled");
         return false;
@@ -95,36 +94,38 @@ export default function UserForm() {
 
       const {
         inputName,
-        inputEmail,
         inputPhone,
+        inputEmail,
         inputAddress,
         inputLandmark,
         googlePlusCodeAddress,
       } = e.target.elements;
 
       const isFormValid =
-        !isEmpty(inputName.value) &&
-        !isEmpty(inputAddress.value) &&
-        !isEmpty(inputPhone.value);
+        !isEmpty(inputName.value || "") &&
+        !isEmpty(inputAddress.value || "") &&
+        !isEmpty(inputPhone.value || "");
 
       if (isFormValid) {
-        if (!user?.name || !user?.fullAddress) {
+        if (isEmpty(user?.name || "") || isEmpty(user?.fullAddress || "")) {
+          console.log("createCustomer");
           await saveCustomer(
             inputName.value,
+            inputPhone.value,
+            inputEmail.value,
             inputAddress.value,
             inputLandmark.value,
-            googlePlusCodeAddress.value,
-            inputEmail.value,
-            inputPhone.value
+            googlePlusCodeAddress.value
           );
         } else {
+          console.log("updateCustomer");
           await editCustomer(
             inputName.value,
+            inputPhone.value,
+            inputEmail.value,
             inputAddress.value,
             inputLandmark.value,
-            googlePlusCodeAddress.value,
-            inputEmail.value,
-            inputPhone.value
+            googlePlusCodeAddress.value
           );
         }
       } else {
@@ -141,17 +142,17 @@ export default function UserForm() {
   };
 
   useEffect(() => {
-    if (window.walletConnection.isSignedIn()) {
-      if (user?.role == 2) {
+    if (isSignedIn) {
+      if (isAdmin) {
         navigate(`/`);
       }
     } else {
       navigate(`/`);
     }
-  }, [window.walletConnection?.isSignedIn]);
+  }, [isSignedIn]);
 
   return (
-    <form onSubmit={(e) => loader == false && handleSubmit(e)}>
+    <form onSubmit={(e) => loader == false && !isAdmin && handleSubmit(e)}>
       <div className="form-floating mb-3">
         <input
           type="text"
@@ -223,7 +224,7 @@ export default function UserForm() {
       <button
         type="submit"
         className="btn btn-primary"
-        disabled={user?.role === 2 || loader === true}
+        disabled={isAdmin || loader === true}
       >
         Submit
       </button>

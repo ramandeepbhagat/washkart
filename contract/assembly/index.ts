@@ -6,7 +6,7 @@
  *
  */
 
-import { Context, ContractPromiseBatch, logging, u128 } from "near-sdk-as";
+import { context, ContractPromiseBatch, logging, u128 } from "near-sdk-as";
 import {
   Admin,
   adminsUmap,
@@ -35,7 +35,7 @@ export function about_project(): string {
  * @return Array of customers
  */
 export function call_customers(): User[] {
-  const account_id = Context.sender;
+  const account_id = context.predecessor;
   assert(adminsUmap.contains(account_id), "Only admins can get customers.");
 
   return customersUmap.values();
@@ -49,8 +49,10 @@ export function call_customers(): User[] {
 export function call_customer_by_account_id(account_id: AccountId): User {
   assert(account_id.length > 5, "AccountId is required.");
 
-  const isAdmin = adminsUmap.contains(Context.sender);
-  const isSelf = account_id == Context.sender;
+  logging.log(`predecessor: ${context.predecessor}`);
+
+  const isAdmin = adminsUmap.contains(context.predecessor);
+  const isSelf = account_id == context.predecessor;
 
   assert(
     isAdmin || isSelf,
@@ -67,7 +69,7 @@ export function call_customer_by_account_id(account_id: AccountId): User {
  * @return Array of orders
  */
 export function call_orders(): Order[] {
-  const account_id = Context.sender;
+  const account_id = context.predecessor;
   assert(adminsUmap.contains(account_id), "Only admins can get orders.");
 
   return ordersUmap.values();
@@ -85,8 +87,8 @@ export function call_order_by_id(order_id: OrderId): Order {
 
   const order = ordersUmap.getSome(order_id);
 
-  const isSelf = order.customerId == Context.sender;
-  const isAdmin = adminsUmap.contains(Context.sender);
+  const isSelf = order.customerId == context.predecessor;
+  const isAdmin = adminsUmap.contains(context.predecessor);
 
   assert(
     isAdmin || isSelf,
@@ -106,7 +108,7 @@ export function call_orders_by_customer_account_id(
 ): Order[] {
   assert(customer_account_id.length > 5, "AccountId is required.");
 
-  const account_id = Context.sender;
+  const account_id = context.predecessor;
 
   const isSelf = customer_account_id == account_id;
   const isAdmin = adminsUmap.contains(account_id);
@@ -146,13 +148,13 @@ export function call_orders_by_customer_account_id(
  */
 export function call_create_customer(
   name: string,
+  phone: string,
+  email: string,
   full_address: string,
   landmark: string,
-  google_plus_code_address: string,
-  phone: string,
-  email: string
+  google_plus_code_address: string
 ): void {
-  const account_id = Context.sender;
+  const account_id = context.predecessor;
 
   assert(account_id.length > 5, "AccountId is required.");
 
@@ -191,13 +193,13 @@ export function call_create_customer(
  */
 export function call_update_customer(
   name: string,
+  phone: string,
+  email: string,
   full_address: string,
   landmark: string,
-  google_plus_code_address: string,
-  phone: string,
-  email: string
+  google_plus_code_address: string
 ): void {
-  const account_id = Context.sender;
+  const account_id = context.predecessor;
 
   assert(account_id.length > 5, "AccountId is required.");
 
@@ -240,8 +242,8 @@ export function call_create_order(
   weight_in_grams: string,
   price_in_yocto_near: u128
 ): void {
-  const account_id = Context.sender;
-  const attachedDeposit = Context.attachedDeposit;
+  const account_id = context.predecessor;
+  const attachedDeposit = context.attachedDeposit;
 
   assert(!adminsUmap.contains(account_id), "Admins cannot create orders.");
 
@@ -301,7 +303,7 @@ export function call_create_order(
 
   customersUmap.set(account_id, customer);
 
-  const beneficiary = ContractPromiseBatch.create(Context.contractName);
+  const beneficiary = ContractPromiseBatch.create(context.contractName);
   beneficiary.transfer(attachedDeposit);
 
   logging.log(
@@ -309,7 +311,7 @@ export function call_create_order(
   );
 
   logging.log(
-    `Transferred ${attachedDeposit} yoctoNear to contract account: ${Context.contractName}`
+    `Transferred ${attachedDeposit} yoctoNear to contract account: ${context.contractName}`
   );
 }
 
@@ -322,7 +324,7 @@ export function call_update_order_status(
   order_id: OrderId,
   order_status: OrderStatus
 ): void {
-  const admin_account_id = Context.sender;
+  const admin_account_id = context.predecessor;
 
   assert(admin_account_id.length > 5, "AccountId is required.");
 
@@ -401,7 +403,7 @@ export function call_customer_feedback(
   customer_feedback: string,
   customer_feedback_comment: string
 ): void {
-  const customerId = Context.sender;
+  const customerId = context.predecessor;
 
   assert(customerId.length > 5, "CustomerId is required.");
 
@@ -432,21 +434,21 @@ export function call_customer_feedback(
  * Get admin IDs of the contract.
  * @return Array of admin account IDs.
  */
-export function view_admins(): string[] {
-  const keys = adminsUmap.keys();
+export function view_admins(): Admin[] {
+  // const keys = adminsUmap.keys();
 
-  const adminList: string[] = [];
+  // const adminList: string[] = [];
 
-  if (keys.length > 0) {
-    for (let i = 0; i < keys.length; ++i) {
-      if (adminsUmap.contains(keys[i])) {
-        const adm = adminsUmap.getSome(keys[i]);
-        adminList[i] = adm.id;
-      }
-    }
-  }
+  // if (keys.length > 0) {
+  //   for (let i = 0; i < keys.length; ++i) {
+  //     if (adminsUmap.contains(keys[i])) {
+  //       const adm = adminsUmap.getSome(keys[i]);
+  //       adminList[i] = adm.id;
+  //     }
+  //   }
+  // }
 
-  return adminList;
+  return adminsUmap.values();
 }
 
 /**
@@ -454,10 +456,10 @@ export function view_admins(): string[] {
  * @param admin_account_id Account ID of the admin.
  */
 export function init(admin_account_id: string): void {
-  const account_id = Context.sender;
-  const predecessor = Context.predecessor;
-  const account_balance = Context.accountBalance;
-  const attachedDeposit = Context.attachedDeposit;
+  const account_id = context.sender;
+  const predecessor = context.predecessor;
+  const account_balance = context.accountBalance;
+  const attachedDeposit = context.attachedDeposit;
 
   assert_self();
 

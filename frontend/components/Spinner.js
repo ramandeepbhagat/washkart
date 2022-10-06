@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { AuthContext } from "../lib/Auth";
 
 export default function Spinner() {
-  const { loader } = useContext(AuthContext);
+  const { loader, isSignedIn } = useContext(AuthContext);
 
-  if (window.walletConnection.isSignedIn() && loader) {
+  if (isSignedIn && loader) {
     return (
       <div className="d-flex align-items-center justify-content-between px-2 mb-4">
         <div className="spinner-border text-success" role="status">

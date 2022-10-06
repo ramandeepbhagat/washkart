@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { signInWithNearWallet, signOutNearWallet } from "../near-api";
 import { AuthContext } from "../lib/Auth";
 
-export default function Header() {
-  const { user } = useContext(AuthContext);
+export default function Header({}) {
+  const { user, isAdmin, isSignedIn, wallet } = useContext(AuthContext);
 
   return (
     <div className="container">
@@ -23,34 +22,29 @@ export default function Header() {
             </Link>
           </li>
 
-          {user?.role != 2 && (
-            <>
-              <li>
-                <Link
-                  to="/account"
-                  className="btn btn-sm nav-link px-2 link-dark"
-                >
-                  Account
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="btn btn-sm nav-link px-2 link-dark"
-                >
-                  About
-                </Link>
-              </li>
-            </>
+          {!isAdmin && (
+            <li>
+              <Link
+                to="/account"
+                className="btn btn-sm nav-link px-2 link-dark"
+              >
+                Account
+              </Link>
+            </li>
           )}
+          <li>
+            <Link to="/about" className="btn btn-sm nav-link px-2 link-dark">
+              About
+            </Link>
+          </li>
         </ul>
 
         <div className="col-md-4 text-end">
-          {user === null ? (
+          {!isSignedIn ? (
             <button
               type="button"
               className="btn btn-sm btn-outline-primary me-2"
-              onClick={signInWithNearWallet}
+              onClick={() => wallet.signIn()}
             >
               Login
             </button>
@@ -60,7 +54,7 @@ export default function Header() {
               <button
                 type="button"
                 className="btn btn-sm btn-outline-danger"
-                onClick={signOutNearWallet}
+                onClick={() => wallet.signOut()}
               >
                 Logout
               </button>

@@ -2,13 +2,6 @@ import "regenerator-runtime/runtime";
 import React, { useEffect, useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./assets/global.css";
-
-import {
-  fetchCustomerByAccountId,
-  getAdminList,
-  fetchOrdersByCustomerAccountId,
-  fetchOrderList,
-} from "./near-api";
 import { AuthContext } from "./lib/Auth";
 
 import Header from "./components/Header";
@@ -19,17 +12,26 @@ import OrderForm from "./components/OrderForm";
 import Feedback from "./components/Feedback";
 import ProjectDemo from "./components/ProjectDemo";
 
-export default function App({ contract, walletConnection }) {
-  const { user, setUser, setLoader, setAdmins, setOrders } =
-    useContext(AuthContext);
+export default function App({ isSignedIn, accountId, contract, wallet }) {
+  const {
+    user,
+    setUser,
+    setLoader,
+    setAdmins,
+    setOrders,
+    setContract,
+    setIsSignedIn,
+    setWallet,
+    setIsAdmin,
+  } = useContext(AuthContext);
 
   const fetchCurrentUser = async () => {
     console.log("exec: [fetchCurrentUser]");
     try {
       setLoader(true);
-      const result = await fetchCustomerByAccountId(window.accountId);
-      // await fetchOrdersForCustomer();
-      // setUser(result);
+      const result = await contract.fetchCustomerByAccountId(accountId);
+      await fetchOrdersForCustomer();
+      setUser(result);
     } catch (error) {
       console.error(`[fetchCurrentUser] ${error?.message}`);
       setLoader(false);
@@ -41,15 +43,18 @@ export default function App({ contract, walletConnection }) {
   const fetchAdmins = async () => {
     console.log("exec: [fetchAdmins]");
     try {
-      setUser({ id: window?.accountId });
       setLoader(true);
-      const adminResult = await getAdminList();
+      const adminResult = await contract.getAdminList();
       setAdmins(adminResult);
 
-      if (adminResult.includes(window?.accountId)) {
-        setUser({ id: window?.accountId, role: 2 });
+      let isUserAdmin = adminResult.find((admin) => admin.id == accountId);
+
+      if (isUserAdmin) {
+        setUser(isUserAdmin);
+        setIsAdmin(true);
         await fetchOrdersForAdmin();
       } else {
+        setUser({ id: accountId, role: 1 });
         await fetchCurrentUser();
       }
     } catch (error) {
@@ -64,7 +69,7 @@ export default function App({ contract, walletConnection }) {
     console.log("exec: [fetchOrdersForAdmin]");
     try {
       setLoader(true);
-      const result = await fetchOrderList();
+      const result = await contract.fetchOrderList();
       setOrders(result);
     } catch (error) {
       setLoader(false);
@@ -78,7 +83,7 @@ export default function App({ contract, walletConnection }) {
     console.log("exec: [fetchOrdersForCustomer]");
     try {
       setLoader(true);
-      const result = await fetchOrdersByCustomerAccountId(window?.accountId);
+      const result = await contract.fetchOrdersByCustomerAccountId(accountId);
       setOrders(result);
     } catch (error) {
       setLoader(false);
@@ -89,18 +94,19 @@ export default function App({ contract, walletConnection }) {
   };
 
   useEffect(() => {
-    if (window?.walletConnection?.isSignedIn()) {
-      (async () => {
-        await fetchAdmins();
-      })();
-    }
-  }, [window.walletConnection.isSignedIn]);
+    setIsSignedIn(isSignedIn);
+    (async () => {
+      setWallet(wallet);
+      setContract(contract);
+      isSignedIn && (await fetchAdmins());
+    })();
+  }, []);
 
   return (
     <>
-      <Header user={user} />
+      <Header />
       <main className="container mb-4">
-        {window.walletConnection.isSignedIn() && <Spinner />}
+        {isSignedIn && <Spinner />}
         <Routes path="/" element={<Home />}>
           <Route path="account" element={<UserForm />} />
           <Route path="about" element={<ProjectDemo />} />

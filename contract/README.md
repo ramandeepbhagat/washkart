@@ -17,23 +17,23 @@ Before you compile this code, you will need to install [Node.js] ≥ 16
 
 ## 1. Create a sub-account
 
-`near create-account test.millefolium.testnet --masterAccount millefolium.testnet --initialBalance 100`
+`near create-account dev-1665063131522-34719789175445 --masterAccount millefolium.testnet --initialBalance 100`
 
 ## 2. Deploy the contract
 
-`near deploy --accountId test.millefolium.testnet --wasmFile ./contract/build/release/washkart.wasm --initFunction init --initArgs '{"admin_account_id": "millefolium.testnet"}'`
+`near deploy --accountId dev-1665063131522-34719789175445 --wasmFile ./contract/build/release/washkart.wasm --initFunction init --initArgs '{"admin_account_id": "millefolium.testnet"}'`
 
 ## 3. View list of admins
 
-`near view test.millefolium.testnet view_admins`
+`near view dev-1665063131522-34719789175445 view_admins`
 
 ## 4. Create a new customer
 
-`near call washkart.YOUR-NAME.testnet call_create_customer '{"name": "john doe", "full_address": "369, wall street", "landmark": "", "google_plus_code_address": "", "phone": "9999567999", "email": "example@email.com"}' --accountId YOUR_ANOTHER_NAME.testnet`
+`near call washkart.YOUR-NAME.testnet call_create_customer '{"name": "john doe", "phone": "9999567999", "email": "example@email.com", "full_address": "369, wall street", "landmark": "", "google_plus_code_address": "" }' --accountId YOUR_ANOTHER_NAME.testnet`
 
 ## 5. Update a customer by accountId
 
-`near call washkart.YOUR-NAME.testnet call_update_customer '{"name": "john doe", "full_address": "369, wall street, new york", "landmark": "city center", "google_plus_code_address": "", "phone": "9999567999", "email": "johndoe@email.com"}' --accountId YOUR_ANOTHER_NAME.testnet`
+`near call washkart.YOUR-NAME.testnet call_update_customer '{"name": "john doe", "phone": "9999567999", "email": "johndoe@email.com", "full_address": "369, wall street, new york", "landmark": "city center", "google_plus_code_address": ""}' --accountId YOUR_ANOTHER_NAME.testnet`
 
 ## 6. View list of customers
 
@@ -41,7 +41,7 @@ Before you compile this code, you will need to install [Node.js] ≥ 16
 
 ## 7. Get a customer by accountId
 
-`near call test.millefolium.testnet call_customer_by_account_id '{"account_id": "envoy.testnet"}' --accountId millefolium.testnet`
+`near call dev-1665063131522-34719789175445 call_customer_by_account_id '{"account_id": "envoy.testnet"}' --accountId envoy.testnet`
 
 ## 8. Create an order
 
@@ -65,4 +65,4 @@ Before you compile this code, you will need to install [Node.js] ≥ 16
 
 ## 13. Delete sub-account
 
-`near delete test.millefolium.testnet millefolium.testnet`
+`near delete dev-1665063131522-34719789175445 millefolium.testnet`

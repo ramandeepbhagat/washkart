@@ -1,14 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
-
-import { createOrder } from "../near-api";
 import { AuthContext } from "../lib/Auth";
 import { isEmpty } from "../lib/utils";
 
 export default function OrderForm() {
   const navigate = useNavigate();
-  const { user, loader, setLoader } = useContext(AuthContext);
+  const { user, loader, setLoader, contract, isAdmin, isSignedIn } =
+    useContext(AuthContext);
   const [totalPrice, setTotalPrice] = useState(3);
 
   const calculate_price = (weight) => {
@@ -32,13 +31,13 @@ export default function OrderForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (window.walletConnection.isSignedIn()) {
+    if (isSignedIn) {
       if (confirm("Are you sure?") != true) {
         console.log("action cancelled");
         return false;
       }
 
-      if (!user?.fullAddress || !user?.phone) {
+      if (!user?.fullAddress || !user?.name) {
         alert(
           "Please update account information before attempting to create an order."
         );
@@ -51,12 +50,13 @@ export default function OrderForm() {
       const { inputDescription, inputWeight } = e.target.elements;
 
       const isFormValid =
-        !isEmpty(inputDescription.value) && !isEmpty(inputWeight.value);
+        !isEmpty(inputDescription.value || "") &&
+        !isEmpty(inputWeight.value || "");
 
       if (isFormValid) {
         try {
           setLoader(true);
-          await createOrder(
+          await contract.createOrder(
             nanoid(),
             inputDescription.value,
             inputWeight.value,
@@ -83,13 +83,13 @@ export default function OrderForm() {
   };
 
   useEffect(() => {
-    if (!window.walletConnection.isSignedIn()) {
+    if (!isSignedIn) {
       navigate(`/`);
     }
-  }, [window.walletConnection.isSignedIn, navigate]);
+  }, [isSignedIn, navigate]);
 
   return (
-    <form onSubmit={(e) => loader == false && handleSubmit(e)}>
+    <form onSubmit={(e) => loader == false && !isAdmin && handleSubmit(e)}>
       <div className="form-floating mb-3">
         <textarea
           type="text"
@@ -148,7 +148,7 @@ export default function OrderForm() {
       <button
         type="submit"
         className="btn btn-primary"
-        disabled={user?.role === 2 || loader === true}
+        disabled={isAdmin || loader === true}
       >
         Submit
       </button>

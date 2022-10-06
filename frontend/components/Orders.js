@@ -2,19 +2,18 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { utils } from "near-api-js";
 import { AuthContext } from "../lib/Auth";
-import { updateOrderStatus } from "../near-api";
 
 export default function Orders() {
-  const { user, orders, setOrders, loader, setLoader } =
+  const { user, orders, setOrders, loader, setLoader, isAdmin, contract } =
     useContext(AuthContext);
 
   const handleStatusChange = async (status, order) => {
     console.log("exec: handleStatusChange");
     try {
-      if (user?.role === 2 && confirm("Are you sure?") == true) {
+      if (isAdmin && confirm("Are you sure?") == true) {
         setLoader(true);
 
-        await updateOrderStatus(order?.id, parseInt(status, 10));
+        await contract.updateOrderStatus(order?.id, parseInt(status, 10));
 
         const updatedOrders = orders.map((o) => {
           if (o?.id === order?.id) {
@@ -40,7 +39,7 @@ export default function Orders() {
     <div className="container">
       <div className="d-flex justify-content-between align-items-center">
         <h5>List of orders</h5>
-        {user?.role != 2 && (
+        {!isAdmin && (
           <Link to="/new" className="btn btn-sm px-2 btn-success">
             New order
           </Link>
@@ -51,7 +50,7 @@ export default function Orders() {
           <thead>
             <tr>
               <th scope="col">OrderId</th>
-              {user?.role === 2 && <th scope="col">CustomerId</th>}
+              {isAdmin && <th scope="col">CustomerId</th>}
               <th scope="col">Payment</th>
               <th scope="col">Total (Near)</th>
               <th scope="col">Status</th>
@@ -66,7 +65,7 @@ export default function Orders() {
                   <td>
                     <Link to={`/${o?.id}`}>{o?.id}</Link>
                   </td>
-                  {user?.role === 2 && <td>{o?.customerId}</td>}
+                  {isAdmin && <td>{o?.customerId}</td>}
                   <td>{o?.paymentType === 1 ? "Prepaid" : ""}</td>
                   <td>
                     {utils.format.formatNearAmount(o?.priceInYoctoNear)} N
@@ -78,6 +77,7 @@ export default function Orders() {
                       value={o?.status}
                       onChange={(e) =>
                         loader == false &&
+                        isAdmin &&
                         handleStatusChange(e?.target?.value, o)
                       }
                     >

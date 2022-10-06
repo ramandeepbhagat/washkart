@@ -2,13 +2,21 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { utils } from "near-api-js";
 import { AuthContext } from "../lib/Auth";
-import { submitCustomerFeedbackByOrderId } from "../near-api";
 
 export default function Feedback() {
-  let { orderId } = useParams();
+  let params = useParams();
   //   let params = useParams();
-  const { user, orders, loader, setLoader, setOrders } =
-    useContext(AuthContext);
+  const {
+    user,
+    orders,
+    loader,
+    setLoader,
+    setOrders,
+    isAdmin,
+    isSignedIn,
+    contract,
+  } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [order, setOrder] = useState({
@@ -29,7 +37,7 @@ export default function Feedback() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (window.walletConnection.isSignedIn()) {
+    if (isSignedIn) {
       if (confirm("Are you sure?") != true) {
         console.log("action cancelled");
         return false;
@@ -38,7 +46,7 @@ export default function Feedback() {
         alert("Order must be Delivered to submit feedback.");
         return;
       }
-      if (user?.role === 2) {
+      if (isAdmin) {
         alert("Only customers can submit feedback.");
         return;
       }
@@ -48,14 +56,14 @@ export default function Feedback() {
       try {
         setLoader(true);
 
-        await submitCustomerFeedbackByOrderId(
+        await contract.submitCustomerFeedbackByOrderId(
           order?.id,
           inputRating?.value,
           inputFeedbackComment?.value
         );
 
         const updatedOrders = orders.map((o) => {
-          if (o?.id === orderId) {
+          if (o?.id === params?.orderId) {
             o.customerFeedback = inputRating?.value;
             o.customerFeedbackComment = inputFeedbackComment?.value;
           }
@@ -74,13 +82,13 @@ export default function Feedback() {
   };
 
   useEffect(() => {
-    if (window.walletConnection.isSignedIn()) {
-      if (!orderId) {
+    if (isSignedIn) {
+      if (!params?.orderId) {
         navigate(`/orders`);
       }
       if (orders?.length) {
         setLoader(true);
-        const found = orders.find((o) => o?.id == orderId);
+        const found = orders.find((o) => o?.id == params?.orderId);
 
         if (found) {
           setOrder(Object.assign({}, order, found));
@@ -94,13 +102,13 @@ export default function Feedback() {
       setLoader(false);
     }
   }, [
-    window.walletConnection.isSignedIn,
+    isSignedIn,
     navigate,
     setOrder,
     setFeedbackRating,
     setFeedbackComment,
     orders,
-    orderId,
+    params?.orderId,
   ]);
 
   return (
@@ -118,7 +126,7 @@ export default function Feedback() {
                 readOnly
                 className="form-control-plaintext"
                 id="staticOrderId"
-                value={orderId}
+                value={params?.orderId}
               />
             </div>
           </div>
@@ -211,7 +219,7 @@ export default function Feedback() {
                     readOnly={user?.role === 2}
                     value={feedbackRating}
                     onChange={(e) =>
-                      user?.role === 1 && setFeedbackRating(e?.target?.value)
+                      !isAdmin && setFeedbackRating(e?.target?.value)
                     }
                   >
                     <option value={1}>None</option>
@@ -230,10 +238,10 @@ export default function Feedback() {
                     className="form-control"
                     id="inputFeedbackComment"
                     placeholder="Cutomer feedback comment"
-                    readOnly={user?.role === 2}
+                    readOnly={isAdmin}
                     value={feedbackComment}
                     onChange={(e) =>
-                      user?.role === 1 && setFeedbackComment(e?.target?.value)
+                      !isAdmin && setFeedbackComment(e?.target?.value)
                     }
                   />
                 </div>
@@ -241,7 +249,7 @@ export default function Feedback() {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={user?.role === 2 || loader === true}
+                  disabled={isAdmin || loader === true}
                 >
                   Submit
                 </button>

@@ -22,6 +22,10 @@ export const AuthProvider = ({ children }) => {
   const [customers, setCustomers] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [contract, setContract] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [wallet, setWallet] = useState(null);
 
   return (
     <AuthContext.Provider
@@ -36,6 +40,14 @@ export const AuthProvider = ({ children }) => {
         setAdmins,
         loader,
         setLoader,
+        isSignedIn,
+        setIsSignedIn,
+        contract,
+        setContract,
+        wallet,
+        setWallet,
+        isAdmin,
+        setIsAdmin,
       }}
     >
       {children}

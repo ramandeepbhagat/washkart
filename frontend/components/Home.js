@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../lib/Auth";
 import Orders from "./Orders";
 
 export default function Home() {
-  if (window.walletConnection.isSignedIn()) {
+  const { isSignedIn } = useContext(AuthContext);
+
+  if (isSignedIn) {
     return <Orders />;
   }
   return (
